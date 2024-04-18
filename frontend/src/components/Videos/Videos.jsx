@@ -1,6 +1,6 @@
 import { updateCurrentVideo } from "../../Redux/videoSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { useState,memo, useMemo } from "react";
+import { useState,memo, useMemo,useRef } from "react";
 import { useMatch, useNavigate } from "react-router-dom";
 import { getUserById } from "../../Redux/authSlice";
 //import { updateViewsOnVideo } from "../../../../backend/src/controllers/video.controller";
@@ -39,11 +39,6 @@ function Videos({idName,thumbnail,title,videoFile,owner,views,timeStamp,descript
     const {currentVideo} = useSelector((state)=>state.video)
     
   
-   
-    
-
-  
-    
     
     async  function handleClick(e){
         e.preventDefault()
@@ -103,6 +98,9 @@ function Videos({idName,thumbnail,title,videoFile,owner,views,timeStamp,descript
             <video controls autoPlay muted style={{position:"absolute", zIndex:"10", top:"0", width:"0"}} className={idName} onMouseLeave={() => document.querySelector(".video").style.width = "100%"}>
     <source src={videoFile} type="video/mp4" />
 </video>
+
+
+
 
             <div className="flex-div">
                 <img src = {owner.avatar}/>

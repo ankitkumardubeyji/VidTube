@@ -1,6 +1,6 @@
 import {  useSelector,useDispatch } from "react-redux"
 import { getVideoById } from "../../Redux/videoSlice"
-import { useEffect, useState,memo, useMemo } from "react"
+import { useEffect, useState,memo, useMemo,useRef } from "react"
 import {updateViewsOnVideo} from "../../Redux/videoSlice"
 import { checkIfSubscribedChannel, getAllSubscribers, toggleSubscriptionStatus } from "../../Redux/subSlice"
 import { useNavigate } from "react-router-dom"
@@ -10,7 +10,8 @@ import {toggleLikeStatus } from "../../Redux/likeSlice"
 import { getCommentsOnVideos } from "../../Redux/commentSlice"
 import CommentOnVideo from "./CommentOnVideo"
 import { updateWatchHistory } from "../../Redux/authSlice"
-
+import SettingsIcon from '@mui/icons-material/Settings';
+import { addCommentOnVideos } from "../../Redux/commentSlice"
 
  function DisplayVideo(){
 const {currentVideoData} = useSelector((state)=>state.video)
@@ -58,14 +59,49 @@ console.log(commentsOnVideoData)
     navigate("/dv")
 }
 
-function toggleLike(){
-    dispatch(toggleLikeStatus(currentVideoData.Id))
-    console.log(liked)
+function toggleLike(e){
+    e.preventDefault()
+    console.log("came here for toggling ");
+  //  dispatch(toggleLikeStatus(currentVideoData.Id))
+   // console.log(liked)
   // navigate("/dv")
 }
 
 
+const videoRef = useRef(null);
+const videoSources = {
+    '360p': `${currentVideoData.VideoFile.replace('/upload/', '/upload/q_auto:low/')}`,
+    '480p': `${currentVideoData.VideoFile.replace('/upload/', '/upload/q_auto:good/')}`,
+    '720p': `${currentVideoData.VideoFile.replace('/upload/', '/upload/q_auto:best/')}`,
+    '1080p': `${currentVideoData.VideoFile.replace('/upload/', '/upload/q_auto:advanced/')}`
+};
+
+
+  const [quality, setQuality] = useState('720p');
+
+
+  const handleQualityChange = (e) => {
+    const newQuality = e.target.value;
+    const currentTime = videoRef.current.currentTime;
+    setQuality(newQuality);
+    videoRef.current.src = videoSources[quality]; // Reload the video with the new quality
+    videoRef.current.currentTime = currentTime
+    videoRef.current.load()
+  };
 //setSubscribers(subscribersData.length)
+
+const [comment,setComment] = useState("");
+
+
+function submitComment(e){
+    console.log(currentVideoData.Id)
+    e.preventDefault();
+    if(!comment.length==0){
+        dispatch(addCommentOnVideos({id:currentVideoData.Id,comment:comment})).then(()=>navigate("/dv"))
+    }
+
+}
+
 
         return(
         <> 
@@ -73,15 +109,27 @@ function toggleLike(){
         <div className="row">
             <div className="play-video">
              
-                   
+                   <div>
+                    
+                   </div>
                      
-                        <video controls autoPlay>
+                     <div style={{display:"flex"}}>
+                     <video ref={videoRef} controls autoPlay >
                       
-                            <source src = {currentVideoData.VideoFile} type="video/mp4" />
-                        
-                       
-                        </video>
-                
+                      <source src={currentVideoData.VideoFile} type="video/mp4" />
+                      
+                     
+                      </video>
+
+                      <label htmlFor="quality" style={{position:"relative" , right:"240px", top:"510px"}}><SettingsIcon style={{color:"white"}}/></label>
+                    <select id="quality" value={quality} onChange={handleQualityChange} style={{position:"relative" , right:"240px", top:"510px", height:"fit-content"}}>
+                        {Object.keys(videoSources).map(q => (
+                        <option key={q} value={q}>{q}</option>
+                        ))}
+                    </select>
+              
+                     </div>
+                 
             
                
                 <div className="tags">
@@ -120,24 +168,40 @@ function toggleLike(){
 
                 <div className="vid-description">
                     <p>{currentVideoData.Description} </p>
-                    <p>Subscribe the {currentVideoData.Username} to learn more on the web Developement</p>
+                    <p>Subscribe the {currentVideoData.Username}</p>
                     <hr/>
-                    <h4>{commentsOnVideoData.length} Comments</h4>
+                    <div style={{display:"flex", justifyContent:"space-between"}}>
+                        <h1>{commentsOnVideoData.length} Comments</h1>
+                            <button type="button" style={{backgroundColor:"grey", color:"white", padding:"10px 10px"}} onClick={submitComment}>Add Comment</button>
+                            
+                    </div>
                     
                 </div>
 
-                <div className="add-comment">
-                    <img src="assets/Jack.png"/>
+                <div className="add-comment" style={{padding:"15px 15px"}}>
+                <h1> Add Your Comment</h1>
+                <input type="text" style={{flex:"none", backgroundColor:"white", color:"black"}} value={comment} onChange={(e)=>setComment(e.target.value)}/>
                   
                 </div>
-                    {
-                        commentsOnVideoData.map((item,index)=> (<CommentOnVideo key = {index} content = { item.content}/>)) 
+
+              
+
+               <div style={{display:"flex",flexDirection:"column",padding:"15px 15px", gap:"30px"}}>
+                <h1>Comments:</h1>
+               
+                {
+                        commentsOnVideoData.map((item,index)=> (<CommentOnVideo key = {index} content = { item.content} avatar={item.owner.avatar} fullName = {item.owner.fullName}/>)) 
                     }
+
+                </div> 
+                
+            </div>
+                   
 
                
             </div>
            </div> 
-           </div> 
+         
         </>)
    
 

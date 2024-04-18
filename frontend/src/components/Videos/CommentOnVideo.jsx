@@ -1,11 +1,12 @@
-function CommentOnVideo({content="ankit"}){
+function CommentOnVideo({content,avatar,fullName}){
+    console.log("aawa pahuna")
     console.log("aawa pahuna")
     return(
         <>
         <div className="old-comment">
-        <img src="assets/Jack.png"/>
+        <img src={avatar}/>
         <div>
-            <h3>John <span>2 days ago</span></h3>
+            <h3>{fullName} <span>2 days ago</span></h3>
             <p>{content}</p>
         </div>
     </div>

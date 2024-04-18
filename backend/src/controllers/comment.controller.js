@@ -11,7 +11,42 @@ const getVideoComments = asyncHandler(async (req, res) => {
     const {videoId} = req.params
     //const {page = 1, limit = 10} = req.query
 
-    const comment = await Comment.find({video:videoId})
+    const comment = await Comment.aggregate([
+        {
+            $match:{
+                video:new mongoose.Types.ObjectId(videoId) 
+            }
+        },
+
+        {
+
+            $lookup:{
+                from:"users",
+                localField:"owner",
+                foreignField:"_id",
+                as:"owner",
+
+                pipeline:[
+                    {
+                        $project:{
+                            fullName:1,
+                            avatar:1 ,
+                        }
+                    }
+                ]
+            }
+        },
+
+        {
+            $addFields:{
+                owner:{
+                    $first:"$owner"
+                }
+               
+            }
+        }
+    ])
+    console.log(comment)
     if(comment){
         res.status(200)
         .json(new ApiResponse(200,comment,"comment on the videos found out successfully "))
@@ -24,6 +59,8 @@ const getVideoComments = asyncHandler(async (req, res) => {
 })
 
 const addComment = asyncHandler(async (req, res) => {
+    console.log("htt bsdka");
+    console.log(req.body);
     // TODO: add a comment to a video
     const {videoId} = req.params
     const {comment} = req.body

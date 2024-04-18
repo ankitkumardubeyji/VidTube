@@ -12,6 +12,7 @@ const initialState = {
 
 // function to get all courses
 export const getCommentsOnVideos = createAsyncThunk("/comment/getComents", async (data) => {
+  let result =[]
   try {
     console.log("Humare yha toh bdwbduwb")
     console.log(data)
@@ -19,8 +20,11 @@ export const getCommentsOnVideos = createAsyncThunk("/comment/getComents", async
 
     toast.promise(res, {
       loading: "Loading the comments on videos  data",
-      success: "Loaded comments on the videos successfully ",
-      error: "Failed to get the comments on the videos ",
+      success: (data)=>{
+        console.log(data);
+        return data?.data?.message
+      }
+     
     });
 
     const response = await res;
@@ -31,6 +35,32 @@ export const getCommentsOnVideos = createAsyncThunk("/comment/getComents", async
   }
 });
 
+export const addCommentOnVideos = createAsyncThunk(
+  "comment/addComment",
+  async ( {id, comment}) => { // Destructure id and data from the payload
+    try {
+      console.log(id);
+      console.log(comment);
+      const res = axios.post(`/api/v1/comments/${id}`, {comment:comment});
+      toast.promise(res,{
+        loading:"wait posting your comment",
+        success:(data)=>{
+          console.log(data);
+          return data?.data?.message;
+        }
+      })
+
+      await res;
+      return res.data;
+    } 
+    
+    catch (error) {
+      // Handle errors
+      console.error('Error posting comment:', error);
+      throw error;
+    }
+  }
+);
 
 
 const commentSlice = createSlice({

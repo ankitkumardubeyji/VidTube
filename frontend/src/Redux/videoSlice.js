@@ -10,7 +10,7 @@ const initialState = {
   videosData: [],
   userVideosData:[],
   currentVideo:0,
-  currentVideoData:{},
+  currentVideoData:JSON.parse(localStorage.getItem("currentVideoData"))||{},
 };
 
 // function to get all courses
@@ -157,6 +157,7 @@ const videoSlice = createSlice({
          
           console.log(action.payload)
          state.currentVideoData = action.payload.payload;  // the data returned by the updateCurrentVideo is being stored in the action.payload 
+        localStorage.setItem("currentVideoData",JSON.stringify(state.currentVideoData))
         }
       })
       .addCase(getUserVideos.fulfilled,(state,action)=>{
