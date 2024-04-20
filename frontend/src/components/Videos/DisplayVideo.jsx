@@ -42,6 +42,7 @@ useEffect(()=>{
  function toggleSubscribe(){
     console.log("edhar")
      dispatch(toggleSubscriptionStatus(currentVideoData.ownerId)).then(()=> dispatch(getAllSubscribers(currentVideoData.ownerId)).then((res)=>setNoOfSubscribers(res.payload.data.length)));
+     dispatch(checkIfSubscribedChannel(currentVideoData.ownerId)).then((res)=> res.payload.length>0 ?setSubscribed(true):setSubscribed(false))
     
 }
 

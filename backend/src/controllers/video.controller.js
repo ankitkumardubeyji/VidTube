@@ -19,7 +19,9 @@ const getAllVideos = asyncHandler(async (req, res) => {
             query,
             sortBy,
             sortType,
-            userId } = req.query;
+            userId ,
+            fullName
+        } = req.query;
 
     // Parse page and limit to numbers
     page = parseInt(page, 10);
@@ -30,6 +32,19 @@ const getAllVideos = asyncHandler(async (req, res) => {
     limit = Math.min(20, Math.max(1, limit)); // Ensure limit is between 1 and 20
 
     const pipeline = [];
+
+    if(fullName){
+        const user = await User.find({fullName:fullName})
+        console.log(user)
+        for(let i=0;i<user.length;i++){
+            pipeline.push({
+                $match: {
+                    owner: new mongoose.Types.ObjectId(user[i]._id)
+                }
+            });
+        }
+    }
+
     
     // Match videos by owner userId if provided
     if (userId) {

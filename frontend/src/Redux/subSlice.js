@@ -75,6 +75,20 @@ export const toggleSubscriptionStatus = createAsyncThunk("/sub/toggle", async (d
 });
 
 
+export const getSubscribed = createAsyncThunk("/sub/subscribed",async(data)=>{
+  const res = axios.get("/api/v1/subscriptions/")
+  let result = []
+  toast.promise(res,{
+    loading:"wait loasding",
+    success:(data)=>{
+      result = data?.data?.data?.data; 
+      return data?.data?.message 
+    }
+  })
+  await res;
+  return (await res).data;
+})
+  
 
 
 
@@ -111,6 +125,11 @@ const subSlice = createSlice({
         if (action.payload) {
           state.subscribed = Object.entries([{...action.payload}][0].data).length>0?true:false;
         }
+      })
+
+      builder.addCase(getSubscribed.fulfilled,(state,action)=>{
+        state.subscribedData = action.payload;
+        console.log(state.subscribedData)
       })
     },
     

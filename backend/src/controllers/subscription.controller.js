@@ -48,10 +48,44 @@ const getUserChannelSubscribers = asyncHandler(async (req, res) => {
 
 // controller to return channel list to which user has subscribed
 const getSubscribedChannels = asyncHandler(async (req, res) => {
-    console.log("heere")
-    const { subscriberId } = req.params
-    console.log(subscriberId)
-    const subscribe = await Subscription.find({subscriber:subscriberId})
+ 
+
+   
+    
+    const subscribe = await Subscription.aggregate([
+        {
+            $match:{
+                subscriber:req.user._id
+            }
+        },
+
+        {
+            $lookup:{
+                from:"users",
+                localField:"channel",
+                foreignField:"_id",
+                as:"owner",
+                pipeline:[
+                    {
+                        $project:{
+                            fullName:1,
+                            userName:1,
+                            _id:1,
+                            avatar:1, 
+                        }
+                    }
+                ]
+            }
+        },
+
+        {
+            $addFields:{
+                owner:{
+                    $first:"$owner"
+                }
+            }
+        }
+    ])
 
     return res.status(200)
     .json(new ApiResponse(200,subscribe,"the channels that the user has subscribed successfully fetched"))

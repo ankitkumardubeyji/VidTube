@@ -7,9 +7,13 @@ import { BsPersonCircle } from "react-icons/bs"
 import { toast } from "react-hot-toast"
 import {  useSelector,useDispatch } from "react-redux"
 import { getUserChannelProfile, logout } from "../../Redux/authSlice"
+import { getAllVideos, searchAllVideos } from "../../Redux/videoSlice"
 
 
 function Navigation({response}){
+
+    const [searchValue,setSearchValue] = useState("")
+
     const isLoggedIn = useSelector((state) => state?.auth?.isLoggedIn);
     const data = useSelector(state => state.auth.data)
     const avatar = data.avatar
@@ -50,6 +54,15 @@ function Navigation({response}){
     }
 
 
+    function handleSubmit(e){
+        e.preventDefault()
+        let searchQuery = `?query=${searchValue}`
+        dispatch(searchAllVideos(searchQuery)).then((res)=>!res.payload?dispatch(searchAllVideos(`?fullName=${searchValue}`)).then(()=>navigate("/search")):navigate("/search"));
+       // searchQuery = `?fullName=${searchValue}`
+       // dispatch(getAllVideos(searchQuery)).then((res)=>console.log(res))
+        
+       
+    }
 
     return(
         <>
@@ -62,8 +75,12 @@ function Navigation({response}){
         <div className="nav-middle flex-div">
 
             <div className="search-box flex-div">
-            <input type="text" placeholder="Search"/>
-            <img src="assets/search.png"/>
+
+                <form onSubmit={handleSubmit} style={{display:"flex", alignItems:"center"}}>
+                <input type="search" placeholder="Search" value={searchValue} onChange={(e)=>setSearchValue(e.target.value)}/>
+                    <img src="assets/search.png"/>
+                </form>
+           
             </div>
             <img src="assets/voice-search.png" className="mic-icon"/>
         </div>

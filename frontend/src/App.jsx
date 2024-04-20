@@ -13,6 +13,7 @@ import UploadVideo from './components/UploadVideo/UploadVideo'
 import UserChannelProfile from './components/UserChannelProfile'
 import UserVideos from './components/Videos/UserVideos'
 import UserWatchHistory from './components/Videos/UserWatchHistory'
+import SearchContainer from './components/Videos/SearchContainer'
 
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
         <Route path='ucp' element={<UserChannelProfile />} /> {/* when comes the /about Abou component passed as outlet */} 
         <Route path='usrV' element={<UserVideos/>} /> {/* when comes the /about Abou component passed as outlet */} 
         <Route path='uwh' element={<UserWatchHistory/>} /> {/* when comes the /about Abou component passed as outlet */} 
+        <Route path='search' element={<SearchContainer/>} /> {/* when comes the /about Abou component passed as outlet */} 
         
       </Route>
     )

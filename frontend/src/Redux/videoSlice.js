@@ -8,17 +8,41 @@ import { useSelector } from "react-redux";
 
 const initialState = {
   videosData: [],
+  searchData:[],
   userVideosData:[],
   currentVideo:0,
   currentVideoData:JSON.parse(localStorage.getItem("currentVideoData"))||{},
 };
 
 // function to get all courses
-export const getAllVideos = createAsyncThunk("/video/get", async () => {
+export const getAllVideos = createAsyncThunk("/video/get", async (data="") => {
   let result = []
   try {
     console.log("edhar to aaya")
-    const res = axios.get("/api/v1/videos/");
+    const res = axios.get(`/api/v1/videos/${data}`);
+
+    toast.promise(res, {
+      loading: "Loading videos data...",
+      success: (data)=>{
+        result = data?.data?.data
+        return data?.data?.message;
+      }
+      
+    });
+ await res;
+
+    return result;
+  } catch (error) {
+    toast.error(error?.response?.data?.message);
+  }
+});
+
+
+export const searchAllVideos = createAsyncThunk("/video/search", async (data="") => {
+  let result = []
+  try {
+    console.log("edhar to aaya")
+    const res = axios.get(`/api/v1/videos/${data}`);
 
     toast.promise(res, {
       loading: "Loading videos data...",
@@ -164,6 +188,11 @@ const videoSlice = createSlice({
           if(action.payload){
             state.userVideosData = [{...action.payload}][0].data;
           }
+      })
+
+      .addCase(searchAllVideos.fulfilled,(state,action)=>{
+        state.searchData = action.payload;
+        console.log(state.searchData)
       })
     ;
     },
