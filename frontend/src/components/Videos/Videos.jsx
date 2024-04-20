@@ -4,7 +4,7 @@ import { useState,memo, useMemo,useRef } from "react";
 import { useMatch, useNavigate } from "react-router-dom";
 import { getUserById } from "../../Redux/authSlice";
 //import { updateViewsOnVideo } from "../../../../backend/src/controllers/video.controller";
-
+import { updateViewsOnVideo } from "../../Redux/videoSlice";
 
 function Videos({idName,thumbnail,title,videoFile,owner,views,timeStamp,description}){
     let time = ""
@@ -26,6 +26,16 @@ function Videos({idName,thumbnail,title,videoFile,owner,views,timeStamp,descript
         console.log(time)
     }
 
+    else{
+        let t = parseInt((new Date()- new Date(timeStamp))/60000);
+        if(t/60>=1){
+            time = parseInt(t/60) + " hours";
+         }
+         else{
+            time = t+" minutes";
+         }
+    }
+
 
     
     
@@ -41,6 +51,7 @@ function Videos({idName,thumbnail,title,videoFile,owner,views,timeStamp,descript
   
     
     async  function handleClick(e){
+        console.log(owner)
         e.preventDefault()
         console.log("here")
         console.log(e.target)
@@ -48,12 +59,14 @@ function Videos({idName,thumbnail,title,videoFile,owner,views,timeStamp,descript
             Thumbnail:thumbnail,
             Title:title,
             VideoFile:videoFile,
-            Views:views,
+            Views:views+1,
             Id:idName,
           //  Username:user,
             Time:time,
             Description:  description,
-            Image:owner.avatar 
+            Image:owner.avatar ,
+            ownerId:owner._id,
+            ownerName:owner.fullName
         }
 
         console.log(signInData)
@@ -61,12 +74,12 @@ function Videos({idName,thumbnail,title,videoFile,owner,views,timeStamp,descript
         console.log("edhar")
         console.log(signInData)
     
-      
+        
        await  dispatch(updateCurrentVideo(signInData))
        
         console.log("hine aabo")
         console.log("current video is :"+currentVideo)
-        navigate("/dv")
+        dispatch(updateViewsOnVideo(idName)).then(()=>navigate("/dv")) 
     }
 
     function addVideo(){
@@ -93,7 +106,7 @@ function Videos({idName,thumbnail,title,videoFile,owner,views,timeStamp,descript
 
     return(
         <>
-        <div className="vid-list" onClick={handleClick} style={{position:"relative"}} onMouseEnter={addVideo} onMouseLeave={removeVideo}>
+        <div className="vid-list" onClick={handleClick} style={{position:"relative", cursor:"pointer"}} onMouseEnter={addVideo} onMouseLeave={removeVideo}>
             <a href="/dv"><img src={thumbnail} className="thumbnail" id={idName} /></a>
             <video controls autoPlay muted style={{position:"absolute", zIndex:"10", top:"0", width:"0"}} className={idName} onMouseLeave={() => document.querySelector(".video").style.width = "100%"}>
     <source src={videoFile} type="video/mp4" />

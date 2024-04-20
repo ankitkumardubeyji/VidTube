@@ -17,7 +17,7 @@ const commentSchema = mongoose.Schema({
         ref:"User"
     }
 
-},{timeStamps:true})
+},{timestamps:true})
 
 commentSchema.plugin(mongooseAggregatePaginate) // enables the functionality of controlling  pagination ie kaha se kaha comment/video dene h
 

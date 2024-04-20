@@ -17,54 +17,42 @@ import { addCommentOnVideos } from "../../Redux/commentSlice"
 const {currentVideoData} = useSelector((state)=>state.video)
 console.log(currentVideoData)
 const dispatch = useDispatch()
-const navigate = useNavigate()
-//const select = useSelector()
 
-useMemo(()=>{
+//const select = useSelector()
+const [quality, setQuality] = useState('720p');
+const[noOfSubscribers,setNoOfSubscribers] = useState(0)
+const [liked,setLiked] = useState(false)
+const[commentsOnVideo,setCommentsOnVideo] = useState([])
+const [comment,setComment] = useState("");
+const [noOfLikes,setNoOfLikes] = useState(0)
+const [subscribed,setSubscribed] = useState(false)
+
+useEffect(()=>{
+  
     // passing the id of the videos to the reducers
-    dispatch(updateViewsOnVideo(currentVideoData.Id))
-    dispatch(getAllSubscribers(currentVideoData.Id))
-    dispatch(checkIfSubscribedChannel(currentVideoData.Id))
-    dispatch(getLikesOnVideos(currentVideoData.Id))
-   dispatch(checkIfLikedVideo(currentVideoData.Id))
-   dispatch(getCommentsOnVideos(currentVideoData.Id))
+    dispatch(getAllSubscribers(currentVideoData.ownerId)).then((res)=>setNoOfSubscribers(res.payload.data.length))
+    dispatch(checkIfSubscribedChannel(currentVideoData.ownerId)).then((res)=>res.payload.data.length>0?setSubscribed(true):setSubscribed(false))
+    dispatch(getLikesOnVideos(currentVideoData.Id)).then((res)=>setNoOfLikes(res.payload.data.length))
+    dispatch(checkIfLikedVideo(currentVideoData.Id)).then((res)=>res.payload.data.length>0?setLiked(true):setLiked(false))
+   dispatch(getCommentsOnVideos(currentVideoData.Id)).then((res)=>setCommentsOnVideo(res.payload.data))
    dispatch(updateWatchHistory(currentVideoData.Id))
 },[])
 
 
-let {subscribed} = useSelector((state)=>state.sub)
-let {liked} = useSelector((state)=>state.like)
-console.log(liked)
-let watchHistory = useSelector((state)=>state.auth.watchHistory)
-console.log(watchHistory)
-
-console.log(useSelector((state)=>state.auth.addedVideoId))
-
-
-const [subscribers,setSubscribers] = useState(0)
-const {subscribersData} = useSelector((state)=>state.sub)
-const { LikesOnVideoData} = useSelector((state)=>state.like)
-const {commentsOnVideoData} = useSelector((state)=>state.comment)
-
-console.log(LikesOnVideoData)
-console.log(commentsOnVideoData)
-
-
-
  function toggleSubscribe(){
     console.log("edhar")
-     dispatch(toggleSubscriptionStatus(currentVideoData.Id))
-     console.log(subscribed)
-    navigate("/dv")
-    navigate("/dv")
+     dispatch(toggleSubscriptionStatus(currentVideoData.ownerId)).then(()=> dispatch(getAllSubscribers(currentVideoData.ownerId)).then((res)=>setNoOfSubscribers(res.payload.data.length)));
+    
 }
 
 function toggleLike(e){
     e.preventDefault()
     console.log("came here for toggling ");
-  //  dispatch(toggleLikeStatus(currentVideoData.Id))
-   // console.log(liked)
-  // navigate("/dv")
+   dispatch(toggleLikeStatus(currentVideoData.Id))
+   .then(()=>dispatch(getLikesOnVideos(currentVideoData.Id)).then((res)=>setNoOfLikes(res.payload.data.length)))
+   .then(()=>dispatch(checkIfLikedVideo(currentVideoData.Id)).then((res)=>res.payload.data.length>0?setLiked(true):setLiked(false)))
+   console.log(liked)
+ //  navigate("/dv")
 }
 
 
@@ -77,7 +65,7 @@ const videoSources = {
 };
 
 
-  const [quality, setQuality] = useState('720p');
+ 
 
 
   const handleQualityChange = (e) => {
@@ -90,14 +78,17 @@ const videoSources = {
   };
 //setSubscribers(subscribersData.length)
 
-const [comment,setComment] = useState("");
+
+
 
 
 function submitComment(e){
     console.log(currentVideoData.Id)
     e.preventDefault();
     if(!comment.length==0){
-        dispatch(addCommentOnVideos({id:currentVideoData.Id,comment:comment})).then(()=>navigate("/dv"))
+        dispatch(addCommentOnVideos({id:currentVideoData.Id,comment:comment})).then((res)=>console.log(res))
+        .then(()=>dispatch(getCommentsOnVideos(currentVideoData.Id)).then((res)=>setCommentsOnVideo(res.payload.data)))
+        setComment("")
     }
 
 }
@@ -140,8 +131,8 @@ function submitComment(e){
                  <p>{currentVideoData.Views} views &bull; {currentVideoData.Time} days ago</p>
                  <div>
                     {
-                        liked?( <a href=""><img src="assets/like-blue.png" onClick={toggleLike}/>{LikesOnVideoData.length}</a>): 
-                        <a href=""><img src="assets/like.png" onClick={toggleLike}/>{LikesOnVideoData.length}</a>
+                        liked?( <a href="" style={{cursor:"pointer"}}onClick={(e)=>toggleLike(e)}><img src="assets/like-blue.png" />{noOfLikes}</a>): 
+                        <a href="" onClick={(e)=>toggleLike(e)}  style={{cursor:"pointer"}}><img src="assets/like.png" />{noOfLikes}</a>
                     }
                   
                     <a href=""><img src="assets/dislike.png"/>2</a>
@@ -154,8 +145,8 @@ function submitComment(e){
                 <div className="publisher">
                     <img src={currentVideoData.Image}/>
                     <div>
-                        <p>{currentVideoData.Username}</p>
-                        <span>{subscribersData.length} subscribers</span>
+                        <p>{currentVideoData.ownerName}</p>
+                        <span>{noOfSubscribers} subscribers</span>
                     </div>
                     {
                        subscribed?(<button type="button" style={{backgroundColor:"blue"}} onClick = {toggleSubscribe}>Subscribed</button>):
@@ -168,29 +159,29 @@ function submitComment(e){
 
                 <div className="vid-description">
                     <p>{currentVideoData.Description} </p>
-                    <p>Subscribe the {currentVideoData.Username}</p>
+                    <p>Subscribe the {currentVideoData.ownerName} Channel</p>
                     <hr/>
                     <div style={{display:"flex", justifyContent:"space-between"}}>
-                        <h1>{commentsOnVideoData.length} Comments</h1>
-                            <button type="button" style={{backgroundColor:"grey", color:"white", padding:"10px 10px"}} onClick={submitComment}>Add Comment</button>
+                        <h1>{commentsOnVideo.length} Comments:</h1>
+                           
                             
                     </div>
                     
                 </div>
 
-                <div className="add-comment" style={{padding:"15px 15px"}}>
-                <h1> Add Your Comment</h1>
-                <input type="text" style={{flex:"none", backgroundColor:"white", color:"black"}} value={comment} onChange={(e)=>setComment(e.target.value)}/>
-                  
+                <div className="add-comment" style={{padding:"10px 45px" ,display:"flex", gap:"20px",alignItems:"center"}}>
+               
+                <input type="text" style={{flex:"none", backgroundColor:"white", color:"black"}} value={comment} onChange={(e)=>setComment(e.target.value)} placeholder="Add Your Comment"/>
+                <button type="button" style={{backgroundColor:"grey", color:"white", padding:"10px 10px", width:"100%"}} onClick={submitComment}>Comment</button>
                 </div>
 
               
 
-               <div style={{display:"flex",flexDirection:"column",padding:"15px 15px", gap:"30px"}}>
-                <h1>Comments:</h1>
+               <div style={{display:"flex",flexDirection:"column",padding:"15px 45px", gap:"30px"}}>
+               
                
                 {
-                        commentsOnVideoData.map((item,index)=> (<CommentOnVideo key = {index} content = { item.content} avatar={item.owner.avatar} fullName = {item.owner.fullName}/>)) 
+                        commentsOnVideo.map((item,index)=> (<CommentOnVideo key = {index} content = { item.content} avatar={item.owner.avatar} fullName = {item.owner.fullName} timeStamp ={item.createdAt}/>)) 
                     }
 
                 </div> 

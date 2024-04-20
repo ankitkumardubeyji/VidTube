@@ -3,6 +3,7 @@ import { useDispatch,useSelector } from "react-redux"
 import { getAllVideos, updateCurrentVideo } from "../../Redux/videoSlice"
 import Videos from "./Videos"
 import SideBar from "../SideBar/SideBar";
+import { Cursor } from "mongoose";
 
 function VideosContainer(){
    
@@ -30,7 +31,7 @@ function VideosContainer(){
 
   <div className="list-container">
             {
-                videosData.map((item,index)=> (<Videos key = {index} idName = { item._id} thumbnail = {item.thumbnail} title = {item.title} videoFile={item.videoFile} owner={item.owner} views = {item.views}  
+                videosData.map((item,index)=> (<Videos  key = {index} idName = { item._id} thumbnail = {item.thumbnail} title = {item.title} videoFile={item.videoFile} owner={item.owner} views = {item.views}  
                 
                     timeStamp ={item.createdAt}   description = {item.description}  />))
             }

@@ -96,12 +96,14 @@ const subSlice = createSlice({
       builder.addCase(getAllSubscribers.fulfilled, (state, action) => {
         if (action.payload) {
           state.subscribersData = [{...action.payload}][0].data;
+          console.log(state.subscribersData);
         }
       })
 
       builder.addCase(checkIfSubscribedChannel.fulfilled, (state, action) => {
         if (action.payload) {
           state.subscribed = [{...action.payload}][0].data.length>0?true:false;
+          console.log([{...action.payload}][0].data);
         }
       })
 

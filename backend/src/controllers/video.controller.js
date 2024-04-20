@@ -90,7 +90,7 @@ const getAllVideos = asyncHandler(async (req, res) => {
                     $project:{
                         fullName:1,
                         avatar:1,
-                        _id:0,
+                        
                     }
                 }
                
