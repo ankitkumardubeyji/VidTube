@@ -4,13 +4,26 @@ import axiosInstance from "../Helper/axiosInstance";
 import axios from "axios";
 import { useEffect } from "react";
 
+const isLoggedInString = localStorage.getItem("isLoggedIn");
+const isLoggedIn = isLoggedInString ? isLoggedInString === 'true' : false;
+
+let data;
+try {
+    const dataString = localStorage.getItem("data");
+    data = dataString ? JSON.parse(dataString) : {};
+} catch (error) {
+    console.error("Error parsing data from localStorage:", error);
+    data = {};
+}
+
 const initialState = {
-  isLoggedIn: localStorage.getItem("isLoggedIn") || false,
-  data: JSON.parse(localStorage.getItem("data")) || {},
+    isLoggedIn: isLoggedIn,
+    data: data,
   watchHistory:JSON.parse(localStorage.getItem("watchHistory"))||[],
   addedVideoId:JSON.parse(localStorage.getItem("addedVideoId"))||[],
+};
 
-  };
+
 
 //console.log(localStorage.getItem("data"))
 
