@@ -7,7 +7,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://vidback.vercel.app/',
+        target: 'http://localhost:5456'',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '')
       }
