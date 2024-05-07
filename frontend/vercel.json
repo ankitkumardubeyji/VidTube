@@ -1,0 +1,9 @@
+{
+    "rewrites": [
+      {
+        "source": "/api/(.*)",
+        "destination": "https://vidback.vercel.app/api/$1"
+      }
+   ]
+  }
+  
