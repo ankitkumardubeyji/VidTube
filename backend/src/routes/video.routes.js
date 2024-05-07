@@ -5,6 +5,7 @@ import {
     getUserVideos,
     getVideoById,
     publishAVideo,
+    searchVideo,
     togglePublishStatus,
     updateVideo,
     updateVideosCount,
@@ -42,5 +43,6 @@ router
 router.route("/toggle/publish/:videoId").patch(togglePublishStatus);
 router.route("/uvc/:videoId").patch(updateVideosCount)
 router.route("/u/:userId").get(getUserVideos)
+router.route("/search/vidtube").get(searchVideo)
 
 export default router

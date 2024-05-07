@@ -1,22 +1,24 @@
-import { useEffect,memo,useMemo } from "react"
+import { useEffect,memo,useMemo, useState } from "react"
 import { useDispatch,useSelector } from "react-redux"
 import { getAllVideos, updateCurrentVideo } from "../../Redux/videoSlice"
 import Videos from "./Videos"
 import SideBar from "../SideBar/SideBar";
 import { Cursor } from "mongoose";
+import { set } from "firebase/database";
 
 function VideosContainer(){
    
 
-    const { videosData } = useSelector((state) => state.video);
+    const [videosData,setVideosData] = useState(useSelector((state) => state.video.videosData))
+    const [loading,setloading] = useState(true)
     //console.log(videosData)
 
     const dispatch = useDispatch()
 
 
     useMemo(() => {
-        (async () => {
-          await dispatch(getAllVideos());
+        ( () => {
+           dispatch(getAllVideos()).then((res)=>setVideosData(res.payload)).then(()=>setloading(false));
         })();
       }, []);
       
@@ -30,12 +32,24 @@ function VideosContainer(){
 
 
   <div className="list-container">
-            {
-                videosData.map((item,index)=> (<Videos  key = {index} idName = { item._id} thumbnail = {item.thumbnail} title = {item.title} videoFile={item.videoFile} owner={item.owner} views = {item.views}  
-                
-                    timeStamp ={item.createdAt}   description = {item.description}  />))
-            }
-
+    
+  {
+    !loading && videosData.map((item, index) => (
+        <Videos
+            key={index}
+            idName={item._id}
+            thumbnail={item.thumbnail}
+            title={item.title}
+            videoFile={item.videoFile}
+            owner={item.owner}
+            views={item.views}
+            timeStamp={item.createdAt}
+            description={item.description}
+            cla="vid-list"
+        />
+    ))
+}
+        
         </div>
 
       

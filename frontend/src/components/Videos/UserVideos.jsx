@@ -124,9 +124,9 @@ function sortonTime(e){
 
         <div className="list-container " style={{backgroundColor:"rgb((229 ,231 ,235)"}}>
             {
-                video.map((item,index)=> (<Videos key = {index} idName = { item._id} thumbnail = {item.thumbnail} title = {item.title} videoFile={item.videoFile} userId={item.owner} views = {item.views}  
+                video.map((item,index)=> (<Videos key = {index} idName = { item._id} thumbnail = {item.thumbnail} title = {item.title} videoFile={item.videoFile} owner={item.owner} views = {item.views}  
                 
-                    timeStamp ={item.createdAt}   description = {item.description}  />))
+                    timeStamp ={item.createdAt}   description = {item.description} cla="vid-list"  />))
             }
 
         </div>

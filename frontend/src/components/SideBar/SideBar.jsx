@@ -3,7 +3,7 @@ import { getUserVideos } from "../../Redux/videoSlice";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getSubscribed } from "../../Redux/subSlice";
-
+import { searchAllVideos } from "../../Redux/videoSlice";
 
 function SideBar(){  
     
@@ -15,7 +15,7 @@ function SideBar(){
     const dispatch = useDispatch()
 
     useEffect(()=>{
-        dispatch(getSubscribed(data._id)).then((res)=>setSubscribed(res.payload.data))
+        dispatch(getSubscribed(data._id)).then((res)=>setSubscribed(res.payload?.data))
     },[])
     function BringVideos(e){
         e.preventDefault()
@@ -42,7 +42,7 @@ return (
         <div className="subscribed-list">
             <h3>SUBSCRIBED</h3>
             {
-                subscribed.map((item,index)=><a href="" key={index}><img src={item.owner.avatar}/><p style={{marginLeft:"10px"}}> {item.owner.fullName} </p></a>)
+                subscribed.map((item,index)=><div style={{display:"flex", alignItems:"center", marginBottom:"5px" , cursor:"pointer"}}onClick={()=>dispatch(searchAllVideos(`?fullName=${item.owner.fullName}`)).then(()=> navigate("/search"))} key={index}><img src={item.owner.avatar} style={{width:"40px", borderRadius:"100%" }}/><p style={{marginLeft:"10px"}}> {item.owner.fullName} </p></div>)
             }
             
         </div>

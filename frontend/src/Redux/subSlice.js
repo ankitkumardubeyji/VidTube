@@ -12,46 +12,35 @@ const initialState = {
   subscribed:false 
 };
 
-// function to get all courses
 export const getAllSubscribers = createAsyncThunk("/sub/subscribers", async (data) => {
   try {
-    console.log("edhar to aaya")
-    console.log(data)
-    const res = axios.get(`/api/v1/subscriptions/u/${data}`);
-
-    toast.promise(res, {
-      loading: "Loading subscribers data",
-      success: "Loaded subscribers successfully",
-      error: "Failed to get subscribers",
-    });
-
+    console.log("edhar to aaya");
+    console.log(data);
+    const res = await axios.get(`/api/v1/subscriptions/u/${data}`);
+    
     const response = await res;
-
+    
     return response.data;
   } catch (error) {
-    toast.error(error?.response?.data?.message);
+    console.error("Failed to get subscribers:", error);
+    throw error; // You can handle or customize the error further as needed
   }
+  
 });
 
 
 export const checkIfSubscribedChannel = createAsyncThunk("/sub/check", async (data) => {
   try {
-    console.log("edhar to aaya")
-    console.log(data)
-    const res = axios.get(`/api/v1/subscriptions/cif/${data}`);
-
-    toast.promise(res, {
-      loading: "checking if subscribed the channel",
-      success: "subscription information successfully received",
-      error: "Failed to get subscribers",
-    });
-
+    console.log("edhar to aaya");
+    console.log(data);
+    const res = await axios.get(`/api/v1/subscriptions/cif/${data}`);
     const response = await res;
-
     return response.data;
   } catch (error) {
-    toast.error(error?.response?.data?.message);
+    console.error(error?.response?.data?.message);
+    throw error;
   }
+  
 });
 
 export const toggleSubscriptionStatus = createAsyncThunk("/sub/toggle", async (data) => {

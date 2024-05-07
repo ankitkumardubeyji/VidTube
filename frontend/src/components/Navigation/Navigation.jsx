@@ -57,7 +57,26 @@ function Navigation({response}){
     function handleSubmit(e){
         e.preventDefault()
         let searchQuery = `?query=${searchValue}`
-        dispatch(searchAllVideos(searchQuery)).then((res)=>!res.payload?dispatch(searchAllVideos(`?fullName=${searchValue}`)).then(()=>navigate("/search")):navigate("/search"));
+        dispatch(searchAllVideos(`?query=${searchValue}`))
+        .then(res => {
+          if (!res.payload) {
+            return dispatch(searchAllVideos(`?fullName=${searchValue}`))
+              .then((res) =>{ if (!res.payload) {
+                    console.log("sorry sorry kaha taru")
+                    return navigate("/nf")
+                }
+                else{
+                   return  navigate("/search")
+                }
+            })
+               
+              .catch(() => navigate("/"));
+          } else {
+            navigate("/search");
+          }
+        })
+        .catch(() => navigate("/"));
+      
        // searchQuery = `?fullName=${searchValue}`
        // dispatch(getAllVideos(searchQuery)).then((res)=>console.log(res))
         

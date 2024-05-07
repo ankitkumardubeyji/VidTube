@@ -12,27 +12,18 @@ const initialState = {
 
 // function to get all courses
 export const getCommentsOnVideos = createAsyncThunk("/comment/getComents", async (data) => {
-  let result =[]
   try {
-    console.log("Humare yha toh bdwbduwb")
-    console.log(data)
-    const res = axios.get(`/api/v1/comments/${data}`);
-
-    toast.promise(res, {
-      loading: "Loading the comments on videos  data",
-      success: (data)=>{
-        console.log(data);
-        return data?.data?.message
-      }
-     
-    });
-
+    console.log("Humare yha toh bdwbduwb");
+    console.log(data);
+    const res = await axios.get(`/api/v1/comments/${data}`);
     const response = await res;
-
+    console.log(response.data);
     return response.data;
   } catch (error) {
-    toast.error(error?.response?.data?.message);
+    console.error(error?.response?.data?.message);
+    throw error;
   }
+  
 });
 
 export const addCommentOnVideos = createAsyncThunk(

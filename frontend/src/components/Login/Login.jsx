@@ -60,7 +60,7 @@ function Login(){
     if(response){
       
       console.log("edhar bhai")
-      navigate("/")
+      setTimeout(()=>navigate("/"),1000)
     }
 
   }

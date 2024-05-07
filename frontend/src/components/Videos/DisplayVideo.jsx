@@ -39,13 +39,18 @@ useEffect(()=>{
 },[])
 
 
- function toggleSubscribe(){
-    console.log("edhar")
-     dispatch(toggleSubscriptionStatus(currentVideoData.ownerId)).then(()=> dispatch(getAllSubscribers(currentVideoData.ownerId)).then((res)=>setNoOfSubscribers(res.payload.data.length)));
-     dispatch(checkIfSubscribedChannel(currentVideoData.ownerId)).then((res)=> res.payload.length>0 ?setSubscribed(true):setSubscribed(false))
-    
-}
+function toggleSubscribe() {
+    console.log("edhar"); // This will be executed first
 
+    dispatch(toggleSubscriptionStatus(currentVideoData.ownerId))
+        .then(() => dispatch(getAllSubscribers(currentVideoData.ownerId)))
+        .then((res) => setNoOfSubscribers(res.payload.data.length))
+        .then(() => dispatch(checkIfSubscribedChannel(currentVideoData.ownerId)))
+        .then((res) => {
+            // Set subscribed status based on the response
+            res.payload.data.length>0?setSubscribed(true):setSubscribed(false)
+        });
+}
 function toggleLike(e){
     e.preventDefault()
     console.log("came here for toggling ");
@@ -129,7 +134,7 @@ function submitComment(e){
                 </div>
                 <h3>{currentVideoData.Title} </h3>
                 <div className="play-vid-info">
-                 <p>{currentVideoData.Views} views &bull; {currentVideoData.Time} days ago</p>
+                 <p>{currentVideoData.Views} views &bull; {currentVideoData.Time}  ago</p>
                  <div>
                     {
                         liked?( <a href="" style={{cursor:"pointer"}}onClick={(e)=>toggleLike(e)}><img src="assets/like-blue.png" />{noOfLikes}</a>): 
@@ -170,7 +175,7 @@ function submitComment(e){
                     
                 </div>
 
-                <div className="add-comment" style={{padding:"10px 45px" ,display:"flex", gap:"20px",alignItems:"center"}}>
+                <div className="add-comment" style={{ display:"flex", gap:"20px",alignItems:"center"}}>
                
                 <input type="text" style={{flex:"none", backgroundColor:"white", color:"black"}} value={comment} onChange={(e)=>setComment(e.target.value)} placeholder="Add Your Comment"/>
                 <button type="button" style={{backgroundColor:"grey", color:"white", padding:"10px 10px", width:"100%"}} onClick={submitComment}>Comment</button>
@@ -178,7 +183,7 @@ function submitComment(e){
 
               
 
-               <div style={{display:"flex",flexDirection:"column",padding:"15px 45px", gap:"30px"}}>
+               <div style={{display:"flex",flexDirection:"column", gap:"30px"}} className="comments">
                
                
                 {

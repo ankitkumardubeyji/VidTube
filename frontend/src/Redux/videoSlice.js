@@ -16,48 +16,34 @@ const initialState = {
 
 // function to get all courses
 export const getAllVideos = createAsyncThunk("/video/get", async (data="") => {
-  let result = []
+  let result = [];
   try {
-    console.log("edhar to aaya")
-    const res = axios.get(`/api/v1/videos/${data}`);
-
-    toast.promise(res, {
-      loading: "Loading videos data...",
-      success: (data)=>{
-        result = data?.data?.data
-        return data?.data?.message;
-      }
-      
-    });
- await res;
-
+    console.log("edhar to aaya");
+    const res = await axios.get(`/api/v1/videos/${data}`);
+    const response = await res;
+    result = response.data.data;
     return result;
   } catch (error) {
-    toast.error(error?.response?.data?.message);
+    console.error(error?.response?.data?.message);
+    throw error;
   }
+  
 });
 
 
 export const searchAllVideos = createAsyncThunk("/video/search", async (data="") => {
-  let result = []
+  let result = [];
   try {
-    console.log("edhar to aaya")
-    const res = axios.get(`/api/v1/videos/${data}`);
-
-    toast.promise(res, {
-      loading: "Loading videos data...",
-      success: (data)=>{
-        result = data?.data?.data
-        return data?.data?.message;
-      }
-      
-    });
- await res;
-
+    console.log("edhar to aaya");
+    const res = await axios.get(`/api/v1/videos/search/vidtube${data}`);
+    const response = await res;
+    result = response.data.data;
     return result;
   } catch (error) {
-    toast.error(error?.response?.data?.message);
+    console.error(error?.response?.data?.message);
+    throw error;
   }
+  
 });
 
 export const publishVideo =  createAsyncThunk("/video/publishVideo",async(data)=>{

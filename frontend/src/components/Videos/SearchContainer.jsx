@@ -1,4 +1,4 @@
-import { useEffect,memo,useMemo } from "react"
+import { useEffect,memo,useMemo, useState } from "react"
 import { useDispatch,useSelector } from "react-redux"
 import { getAllVideos, updateCurrentVideo } from "../../Redux/videoSlice"
 import Videos from "./Videos"
@@ -6,9 +6,17 @@ import SideBar from "../SideBar/SideBar";
 import { Cursor } from "mongoose";
 
 function SearchContainer(){
+    const searchData = useSelector((state) => state.video.searchData)
+    const [loading,setloading] = useState(true)
    
+useEffect(()=>{
 
-    const { searchData } = useSelector((state) => state.video);
+    if(searchData){
+        console.log(searchData)
+        setloading(false)
+    }
+},[searchData])
+   
     //console.log(videosData)
   
     return(
@@ -20,11 +28,11 @@ function SearchContainer(){
         </div>
 
 
-  <div className="list-container">
+  <div className="list-container search">
             {
-                searchData.map((item,index)=> (<Videos  key = {index} idName = { item._id} thumbnail = {item.thumbnail} title = {item.title} videoFile={item.videoFile} owner={item.owner} views = {item.views}  
+              !loading && searchData.map((item,index)=> (<Videos  key = {index} idName = { item._id} thumbnail = {item.thumbnail} title = {item.title} videoFile={item.videoFile} owner={item.owner} views = {item.views}  
                 
-                    timeStamp ={item.createdAt}   description = {item.description}  />))
+                    timeStamp ={item.createdAt}   description = {item.description} cla="searchvid"  />))
             }
 
         </div>

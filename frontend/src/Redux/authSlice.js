@@ -163,47 +163,32 @@ export const logout = createAsyncThunk("auth/logout", async () => {  // asyncThu
 
 
   export const updateWatchHistory = createAsyncThunk("auth/updateWatchHistory",async(data)=>{
-      let result =[]
-    try{
-      console.log(data.length+" "+"is leb")
-      const res = axios.patch(`api/v1/users/uwh/${data}`)
-      await toast.promise(res,{
-      loading:"wait updating the user watch history",
-      success:(data)=>{
-        console.log(data)
-        result = data?.data?.data 
-        return data?.data?.message
-      }
-      });
+    let result = [];
+try {
+  console.log(data.length + " is leb");
+  const res = await axios.patch(`api/v1/users/uwh/${data}`);
+  const response = await res;
+  result = response.data.data;
+  return result;
+} catch (error) {
+  console.error(error.message);
+  throw error;
+}
 
-     await res;
-     return result
-      
-    }
-    catch(error){
-      toast.error(error.message)
-    }
   })
 
   export const getWatchHistory = createAsyncThunk("auth/getWatchHistory",async()=>{
-      let result=[]
-    try{
-      const res = axios.get(`api/v1/users/history`)
-      await toast.promise(res,{
-      loading:"wait loading the user watch history",
-      success:(data)=>{
-        result = data.data.data
-        return data?.data?.message
-      }
-      });
-
-     await res;
-     return result
-      
+    let result = [];
+    try {
+      const res = await axios.get(`api/v1/users/history`);
+      const response = await res;
+      result = response.data.data;
+      return result;
+    } catch (error) {
+      console.error(error.message);
+      throw error;
     }
-    catch(error){
-      toast.error(error.message)
-    }
+    
   })
 
 

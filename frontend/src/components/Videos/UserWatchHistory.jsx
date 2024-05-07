@@ -27,7 +27,7 @@ function UserWatchHistory(){
             {
                 watchHistory.map((item,index)=> (<Videos key = {index} idName = { item._id} thumbnail = {item.thumbnail} title = {item.title} videoFile={item.videoFile} owner={item.owner} views = {item.views}  
                 
-                    timeStamp ={item.createdAt}   description = {item.description}  />))
+                    timeStamp ={item.createdAt}   description = {item.description} cla="vid-list" />))
             }
 
         </div>

@@ -15,43 +15,31 @@ const initialState = {
 // function to get all courses
 export const getLikesOnVideos = createAsyncThunk("/like/getLikes", async (data) => {
   try {
-    console.log("edhar to aaya")
-    console.log(data)
-    const res = axios.get(`/api/v1/likes/${data}`);
-
-    toast.promise(res, {
-      loading: "Loading the likes on videos  data",
-      success: "Loaded likes on the videos successfully ",
-      error: "Failed to get the likes on the videos ",
-    });
-
+    console.log("edhar to aaya");
+    console.log(data);
+    const res = await axios.get(`/api/v1/likes/${data}`);
     const response = await res;
-
     return response.data;
   } catch (error) {
-    toast.error(error?.response?.data?.message);
+    console.error(error?.response?.data?.message);
+    throw error;
   }
+  
 });
 
 
 export const checkIfLikedVideo = createAsyncThunk("/like/check", async (data) => {
   try {
-    console.log("edhar to check krana phuch gya tha")
-    console.log(data)
-    const res = axios.get(`/api/v1/likes/cif/${data}`);
-
-    toast.promise(res, {
-      loading: "checking if  liked the video ",
-      success: "liking  information successfully received",
-      error: "Failed to get the liked videos ",
-    });
-
+    console.log("edhar to check krana phuch gya tha");
+    console.log(data);
+    const res = await axios.get(`/api/v1/likes/cif/${data}`);
     const response = await res;
-
     return response.data;
   } catch (error) {
-    toast.error(error?.response?.data?.message);
+    console.error(error?.response?.data?.message);
+    throw error;
   }
+  
 });
 
 

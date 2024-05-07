@@ -6,7 +6,7 @@ import { getUserById } from "../../Redux/authSlice";
 //import { updateViewsOnVideo } from "../../../../backend/src/controllers/video.controller";
 import { updateViewsOnVideo } from "../../Redux/videoSlice";
 
-function Videos({idName,thumbnail,title,videoFile,owner,views,timeStamp,description}){
+function Videos({idName,thumbnail,title,videoFile,owner,views,timeStamp,description,cla=""}){
     let time = ""
     const savedYear = Number(timeStamp.substring(0,5))
     const savedMonth = Number(timeStamp.substring(5,7));
@@ -90,6 +90,9 @@ function Videos({idName,thumbnail,title,videoFile,owner,views,timeStamp,descript
             console.log("came for adding the video")
             ele.play()
             ele.style.width="100%"
+            if(cla=="searchvid"){
+                ele.style.width="450px"
+            }
         }
     }
 
@@ -106,11 +109,14 @@ function Videos({idName,thumbnail,title,videoFile,owner,views,timeStamp,descript
 
     return(
         <>
-        <div className="vid-list" onClick={handleClick} style={{position:"relative", cursor:"pointer"}} onMouseEnter={addVideo} onMouseLeave={removeVideo}>
-            <a href="/dv"><img src={thumbnail} className="thumbnail" id={idName} /></a>
-            <video controls autoPlay muted style={{position:"absolute", zIndex:"10", top:"0", width:"0"}} className={idName} onMouseLeave={() => document.querySelector(".video").style.width = "100%"}>
-    <source src={videoFile} type="video/mp4" />
-</video>
+        <div className ={cla}  onClick={handleClick} style={{position:"relative", cursor:"pointer"}} onMouseEnter={addVideo} onMouseLeave={removeVideo}>
+           <div className="image">
+           <a href="/dv"><img src={thumbnail} className="thumbnail" id={idName} /></a>
+            <video controls autoPlay muted style={{position:"absolute", zIndex:"10", top:"0", width:"0"}} className={idName} >
+    <source src={videoFile} type="video/mp4" /></video>
+           </div>
+        
+
 
 
 
