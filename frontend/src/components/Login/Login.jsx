@@ -49,7 +49,7 @@ function Login(){
 
     
     console.log(signInData)
-    const response =  dispatch(validateUserAccount(signInData)).then(()=>setTimeOut(()=> navigate("/"),2000);
+    const response =  dispatch(validateUserAccount(signInData)).then(()=>setTimeOut(()=> navigate("/"),2000));
     
     
     console.log(response)
