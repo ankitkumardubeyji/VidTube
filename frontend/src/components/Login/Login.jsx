@@ -49,7 +49,8 @@ function Login(){
 
     
     console.log(signInData)
-    const response =  dispatch(validateUserAccount(signInData))
+    dispatch(validateUserAccount(signInData)).then(()=> setTimeout(()=>navigate("/"),2000)).catch((err)=>console.log(err))
+    
     console.log(response)
     setSignInData({
       fullName:"",
