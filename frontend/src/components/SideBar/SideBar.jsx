@@ -1,6 +1,6 @@
 import { useDispatch ,useSelector} from "react-redux";
 import { getUserVideos } from "../../Redux/videoSlice";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getSubscribed } from "../../Redux/subSlice";
 import { searchAllVideos } from "../../Redux/videoSlice";
@@ -28,14 +28,14 @@ return (
     
 <div className="side-bar">
         <div className="shortcut-link">
-            <a href="/"><img src="assets/home.png"/><p>Home</p></a>
-            <a href="/uv"><img src="assets/explore.png"/><p>Upload Video</p></a>
-            <a href=""><img src="assets/subscriprion.png"/><p onClick={BringVideos}>Your Videos</p></a>
-            <a href=""><img src="assets/library.png"/><p>Library</p></a>
-            <a href="/uwh"><img src="assets/history.png"/><p>History</p></a>
-            <a href=""><img src="assets/playlist.png"/><p>Playlist</p></a>
-            <a href=""><img src="assets/playlist.png"/><p>Messages</p></a>
-            <a href=""><img src="assets/show-more.png"/><p>Show More </p></a>
+            <Link to="/"><img src="assets/home.png"/><p>Home</p></Link>
+            <Link to="/uv"><img src="assets/explore.png"/><p>Upload Video</p></Link>
+            <Link to="/yv"><img src="assets/subscriprion.png"/><p onClick={BringVideos}>Your Videos</p></Link>
+            <Link to=""><img src="assets/library.png"/><p>Library</p></Link>
+            <Link to="/uwh"><img src="assets/history.png"/><p>History</p></Link>
+            <Link to=""><img src="assets/playlist.png"/><p>Playlist</p></Link>
+            <Link to=""><img src="assets/playlist.png"/><p>Messages</p></Link>
+            <Link to=""><img src="assets/show-more.png"/><p>Show More </p></Link>
             <hr/>
         </div>
 
