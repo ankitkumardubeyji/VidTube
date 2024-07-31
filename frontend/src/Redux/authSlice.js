@@ -29,24 +29,22 @@ const initialState = {
 
 export const createAccount = createAsyncThunk("/auth/signup",async(data)=>{
     try{
-        const res =  axios.post("/api/v1/users/register",data)
+        let result =""
+        const res = axios.post("/api/v1/users/register",data)
         toast.promise(res,{
-            loading:"wait! creating your account",
+            loading:"wait! creating your account...",
             success:(data)=>{
                 console.log(data)
-                return data?.data?.message;
+                result = data?.data?.data.user 
+                return data?.data?.message
             },
-            error:"failed to create Account"
+            error:"failed to create the account"
         })
-        
-        console.log(res)
-         await res
-        return res.data;
+        await res ;
+        return result;
     }
-
-    catch(error){
-        console.log(error)
-        toast.error(error?.response?.data?.message)
+    catch(err){
+       toast.error(err?.response?.data?.message)
     }
 
 })
@@ -222,6 +220,15 @@ const authSlice = createSlice({
             state.isLoggedIn = true;
             state.data = action?.payload
           })
+
+              .addCase(createAccount.fulfilled,(state,action)=>{
+            console.log(action.payload)
+            localStorage.setItem("data",JSON.stringify(action?.payload))
+            localStorage.setItem("isLoggedIn",true)
+            state.isLoggedIn = true
+            state.data = action?.payload 
+        })
+            
 
           .addCase(logout.fulfilled, (state) => {
             localStorage.clear();
