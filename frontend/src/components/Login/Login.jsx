@@ -1,6 +1,6 @@
 
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,Link } from "react-router-dom";
 import { useState } from "react"
 import { toast } from "react-hot-toast";
 import { validateUserAccount } from "../../Redux/authSlice";
@@ -122,7 +122,7 @@ function Login(){
 
     <p className="mt-10 text-center text-sm text-gray-500">
       Not a member?
-      <a href="#" className="font-semibold leading-6 text-red-600 hover:text-indigo-500">Start a 14 day free trial</a>
+      <Link to="/register" className="font-semibold leading-6 text-red-600 hover:text-indigo-500">Register</a>
     </p>
   </div>
 </div>
