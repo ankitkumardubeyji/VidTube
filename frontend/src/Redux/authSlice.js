@@ -221,13 +221,7 @@ const authSlice = createSlice({
             state.data = action?.payload
           })
 
-              .addCase(createAccount.fulfilled,(state,action)=>{
-            console.log(action.payload)
-            localStorage.setItem("data",JSON.stringify(action?.payload))
-            localStorage.setItem("isLoggedIn",true)
-            state.isLoggedIn = true
-            state.data = action?.payload 
-        })
+          
             
 
           .addCase(logout.fulfilled, (state) => {
